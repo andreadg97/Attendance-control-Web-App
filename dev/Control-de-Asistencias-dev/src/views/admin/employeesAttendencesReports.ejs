@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Reportes de Asistencias</title>
+    <% include ../partials/bootstrap
+    moment().locale('es') 
+    %>
+    <link href='/css/fullcalendar.css' rel='stylesheet' />
+    <link href='/css/fullcalendar.min.css' rel='stylesheet' />
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src='/js/moment.min.js'></script>
+    <script src='/js/fullcalendar/fullcalendar.min.js'></script>
+    <script src='/js/fullcalendar/fullcalendar.js'></script>
+    <script src='/js/fullcalendar/locale/es.js'></script>
+    <script src="/js/print.min.js"></script>
+</head>
+
+<body>
+    <%if(userType ==='GERENTE'){%>
+    <% include ../partials/menu-admin %>
+    <%}else{%>
+        <% include ../partials/menu-rh %>
+    <%}%>
+    <div class="container">
+        <% include ../partials/_msgs %>
+        <div class="col-md-5 mx-auto text-center">
+            <h1>Reportes de Asistencias</h1>
+            <div class="card text-center">
+                <div class="card-header ">
+                    <h4 class="card-title font-weight-bold">Opciones</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/empleados/asistencias/reportes" method="POST" class="form-horizontal">
+                        <div class="form-group">
+                            <h5 class="font-weight-bold">Empleado</h5>
+                            <div class="form-control">
+                                <input id="radioAll" type="radio" name="todos" value="true"
+                                    onclick="changeEmployeesList()"
+                                    <% if (!optionsSelected.todos || (optionsSelected.todos=="true")){%>checked<% }%>>
+                                Todos
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-control">
+                                <input id="radioOne" type="radio" name="todos" value="false"
+                                    onclick="changeEmployeesList()"
+                                    <% if (optionsSelected.todos=="false"){%>checked<% }%>> Por empleado
+                            </div>
+                            <select id="empList" class="form-control" title="Empleado" name="empleado"
+                                <% if (!optionsSelected.todos || (optionsSelected.todos && optionsSelected.todos=="true")){%>disabled<% }%>
+                                required>
+                                <option value="" disabled selected hidden>Seleccione:</option>
+                                <% employees.forEach(employee => { %>
+                                <option value="<%= employee.folio %>"
+                                    <% if(employee.folio == optionsSelected.empleado) {%>selected
+                                    <%}%>><%= "("+employee.folio+") "+employee.nombre%></option> <%});%> </select>
+                                    </div> <div class="form-group">
+                                    <h5 class="font-weight-bold">Periodo</h5>
+                                    <div class="form-inline">
+                                        <div class="col-sm-6">
+                                            <label class="font-weight-bold" for="fechaInicio">Desde</label>
+                                            <input id="fechaInicio" type="date" title="Fecha de inicio"
+                                                class="form-control" value="<% if (optionsSelected.fechaInicio){%><%= optionsSelected.fechaInicio %><%}else{%>2019-01-01<%}%>"
+                                                min="2019-01-01" name="fechaInicio" onchange="changeDatesLimits(0)" required />
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="font-weight-bold" for="fechaFin">Hasta</label>
+                                                <input id="fechaFin" type="date" title="Fecha final" class="form-control" value="<% if (optionsSelected.fechaFin){%><%= optionsSelected.fechaFin%><%}else{%><%=moment().format("YYYY-MM-DD")%><%}%>"
+                                                max="<%= moment().format("YYYY-MM-DD")%>" name="fechaFin" onchange="changeDatesLimits(1)" required />
+                                            </div>
+                                        </div>
+                            </div>
+                            <button class="btn btn-primary btn-block">Generar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        
+                <%if(attendences){ %>
+                    <br>
+                    <div id="report" class="row">
+                                            <div class="col-md-12 text-center">
+                                                <h1>Reporte</h1>
+                                                <!-- LIST -->
+                                                <table class=" table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Fecha</th>
+                                                            <th scope="col">Folio Empleado</th>
+                                                            <th scope="col">Nombre Empleado</th>
+                                                            <th scope="col">Asistencia</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% for(var n=attendences.length-1;n>=0;n--){ %>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                <%= moment(attendences[n].fecha).format("DD-MM-YYYY") %>
+                                                            </th>
+                                                            <td><%= employeesList[n].folio %></td>
+                                                            <td><%= employeesList[n].nombre %></td>
+                                                            <td>
+                                                                <%if(attendences[n].type ===0){%>
+                                                                <a class="text-danger">
+                                                                    <h6>FALTA</h6>
+                                                                </a>
+                                                                <%}%>
+                                                                <%if(attendences[n].type ===1){%>
+                                                                <a class="text-success">
+                                                                    <h6>ASISTENCIA</h6>
+                                                                </a>
+                                                                <%}%>
+                                                                <%if(attendences[n].type ===2){%>
+                                                                <a class="text-warning">
+                                                                    <h6>RETRASO</h6>
+                                                                </a>
+                                                                <%}%>
+                                                                <%if(attendences[n].type ===3){%>
+                                                                <a class="text-info">
+                                                                    <h6>JUSTIFICADA</h6>
+                                                                </a>
+                                                                <%}%>
+                                                                    </td>
+                                                            </tr>
+                                                            <% } %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-2 mx-auto text-center">
+                                            <button class="btn btn-success btn-block"
+                                                onclick="printJS({ printable: 'report', type: 'html', targetStyles: ['*']})">Imprimir</button>
+                                        </div>
+                                        <%}%>
+                                            <br>
+                                            <br>
+                                        </div>
+                                            </body>
+<script>
+    function changeEmployeesList() {
+        let radioAll = document.getElementById("radioAll");
+        let radioOne = document.getElementById("radioOne");
+        let empList = document.getElementById("empList");
+
+        // Si se selecciona "Por empleado"
+        if (radioOne.checked) {
+            empList.disabled = false;
+        }
+        else {
+            empList.disabled = true;
+            empList.selectedIndex = 0;
+        }
+    }
+    function changeDatesLimits(n) {
+        let fechaInicio = document.getElementById("fechaInicio");
+        let fechaFin = document.getElementById("fechaFin");
+        if (n === 0) {
+            fechaFin.min = moment(fechaInicio.value).format("YYYY-MM-DD");
+        }
+        else {
+            fechaInicio.max = moment(fechaFin.value).format("YYYY-MM-DD");
+        }
+    }
+</script>
+
+</html>

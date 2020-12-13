@@ -1,0 +1,22 @@
+
+  <% 
+if(flash.success_msg){
+%>
+  <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+      <%- flash.success_msg %>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% } %>
+
+<% 
+if(flash.error_msg){
+%>
+  <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+      <%- flash.error_msg %>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% } %>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+  <title>Registrar Empleado</title>
+  <% include ../partials/bootstrap %>
+</head>
+
+<body>
+  <% include ../partials/menu-admin %>
+  <div class="container">
+    <% include ../partials/_msgs %>
+    <div class="row">
+      <div class="col-md-5 mx-auto">
+        <div class="card text-center">
+          <div class="card-header">
+            <h4 class="card-title">Registro de Empleado</h4>
+          </div>
+          <div class="card-body">
+            <form action="/empleados/registrar" method="POST" class="form-horizontal">
+              <h5 class="card-text">Datos personales</h5>
+              <div class="form-group">
+                <input type="text" title="Nombre" class="form-control" name="nombre" placeholder="Nombre"
+                  value="<%= datos.nombre%>" required />
+              </div>
+              <div class="form-group">
+                <select class="form-control" title="Puesto" name="puesto" required>
+                  <option value="" disabled selected hidden>Puesto:</option>
+                  <option value="GERENTE" <% if(datos.puesto == "GERENTE") {%>selected<%}%>>GERENTE</option>
+                        <option value="RH" <% if(datos.puesto == "RH") {%>selected<%}%>>RH</option>
+                        <option value="EMPLEADO" <% if(datos.puesto == "EMPLEADO") {%>selected<%}%>>EMPLEADO</option>
+                      </select>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="text"
+                    title="Dirección"
+                    class="form-control"
+                    name="direccion"
+                    placeholder="Dirección"
+                    value="<%= datos.direccion%>" required />
+              </div>
+              <div class="form-group">
+                <input type="text" title="Teléfono" class="form-control" name="telefono"
+                  placeholder="Teléfono (10 dígitos)" minlength="12" value="<%= datos.telefono%>"
+                  onkeypress="return event.charCode >= 48 && event.charCode <= 57 && this.value.length < 12"
+                  onkeyup="if(this.value.length == 3 || this.value.length == 7) this.value += ' ';" required />
+              </div>
+              <div class="form-group">
+                <input type="text" title="Fecha de nacimiento" class="form-control" name="fechaNacimiento"
+                  placeholder="Fecha de nacimiento" value="<%= datos.fechaNacimiento%>" onfocus="(this.type='date')"
+                  onblur="(this.type='text')" required />
+              </div>
+              <div class="form-group">
+                <input type="email" title="Correo" class="form-control" name="correo" value="<%= datos.correo%>"
+                  placeholder="Email" required />
+              </div>
+              <div class="form-group">
+                <input type="text" title="RFC" class="form-control" name="rfc" placeholder="RFC" value="<%= datos.rfc%>"
+                  minlength="12" maxlength="13" onkeyup="this.value = this.value.toUpperCase();" required />
+              </div>
+              <div class="form-group">
+                <input type="password" title="Contraseña" minlength="6" class="form-control" value="<%= datos.psw%>"
+                  name="psw" placeholder="Contraseña (6+ caractéres)" required />
+              </div>
+              <h5 class="card-text">Horario</h5>
+              <div class="form-group">
+                <div class="form-inline">
+                  <div class="col-sm-6">
+                    <input type="text" title="Hora de entrada" class="form-control" value="<%= datos.horaEntrada%>"
+                      name="horaEntrada" onfocus="(this.type='time')" onblur="(this.type='text')"
+                      placeholder="Hora de entrada" required />
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="text" title="Hora de salida" class="form-control" value="<%= datos.horaSalida%>"
+                      name="horaSalida" onfocus="(this.type='time')" onblur="(this.type='text')"
+                      placeholder="Hora de entrada" required />
+                  </div>
+                </div>
+              </div>
+              <!-- Semana -->
+              <div class="form-group">
+                <div class="form-inline">
+                  <div class="col-sm-3">
+                    <label class="checkbox-inline"><input type="checkbox" name="lunes" value="40" <% if(datos.semanaTrabajo && datos.semanaTrabajo[0]) {%>checked<%}%>>Lunes</label>
+                  </div>
+                  <div class="col-sm-3">
+                      <label class="checkbox-inline"><input type="checkbox" name="martes" value="" <% if(datos.semanaTrabajo && datos.semanaTrabajo[1]) {%>checked<%}%>>Martes</label>
+                </div>
+                <div class="col-sm-3">
+                    <label class="checkbox-inline"><input type="checkbox" name="miercoles" value="" <% if(datos.semanaTrabajo && datos.semanaTrabajo[2]) {%>checked<%}%>>Miércoles</label>
+              </div>
+              <div class="col-sm-3">
+                  <label class="checkbox-inline"><input type="checkbox" name="jueves" value="" <% if(datos.semanaTrabajo && datos.semanaTrabajo[3]) {%>checked<%}%>>Jueves</label>
+            </div>
+            <div class="col-sm-3">
+                <label class="checkbox-inline"><input type="checkbox" name="viernes" value="" <% if(datos.semanaTrabajo && datos.semanaTrabajo[4]) {%>checked<%}%>>Viernes</label>
+          </div>
+          <div class="col-sm-3">
+              <label class="checkbox-inline"><input type="checkbox" name="sabado" value="" <% if(datos.semanaTrabajo && datos.semanaTrabajo[5]) {%>checked<%}%>>Sábado</label>
+        </div>
+        <div class="col-sm-3">
+            <label class="checkbox-inline"><input type="checkbox" name="domingo" value="" <% if(datos.semanaTrabajo && datos.semanaTrabajo[6]) {%>checked<%}%>>Domingo</label>
+      </div>
+    </div>
+                </div>
+                <h5 class="card-text">Contrato</h5>
+                <div class="form-group">
+                    <input type="text" title="Fecha de contratación" class="form-control" name="fechaContrato" placeholder="Fecha de contratación"
+                      value="<%= datos.fechaContrato %>" onfocus="(this.type='date')" onblur="(this.type='text')"
+                        required />
+                  </div>
+                  <h5 class="card-text">Vacaciones y días libres</h5>
+                  <div class="form-group">
+                    <div class="form-inline">
+                      <div class="col-sm-6">
+                        <input type="text" title="Días de disponibles para vacaciones" class="form-control" value="<%= datos.vacacionesDisponibles%>"
+                          name="vacacionesDisponibles" onfocus="(this.type='number')" onblur="(this.type='text')"
+                          min="0"
+                          placeholder="Días de vacaciones" required />
+                      </div>
+                      <div class="col-sm-6">
+                        <input type="text" title="Días libres" class="form-control" value="<%= datos.diasLibres%>"
+                        name="diasLibres" onfocus="(this.type='number')" onblur="(this.type='text')"
+                        min="0"
+                        placeholder="Días libres actuales" required />
+                      </div>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary btn-block">
+                      Registrar
+                      </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

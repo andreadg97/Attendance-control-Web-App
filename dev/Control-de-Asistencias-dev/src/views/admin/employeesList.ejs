@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+  <title>Lista de Empleados</title>
+  <% include ../partials/bootstrap
+    moment().locale('es') 
+    %>
+
+</head>
+
+<body>
+  <% include ../partials/menu-admin %>
+  <div class="container">
+    <% include ../partials/_msgs %>
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h1>Empleados</h1>
+
+        <!-- LIST -->
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Folio</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Puesto</th>
+              <th scope="col">Teléfono</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Registro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if(employees.length==0) {%>
+            <span>No hay empleados para mostrar</span>
+            <% }else{%>
+            <% for(var n=0;n<employees.length;n++){ %>
+            <tr>
+              <th scope="row"><%= employees[n].folio %></th>
+              <td><%= employees[n].nombre %></td>
+              <td><%= employees[n].puesto %></td>
+              <td><%= employees[n].telefono %></td>
+              <td><%= employees[n].correo %></td>
+              <td><%= moment(employees[n].fechaRegistro).format("DD  MMMM  YYYY") %></td>
+            </tr>
+            <% }} %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

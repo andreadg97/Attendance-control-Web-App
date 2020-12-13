@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>Iniciar Sesión</title>
+    <% include partials/bootstrap %>
+  </head>
+
+  <body>
+    <% include partials/menu %>
+    <div class="container">
+      <% include partials/_msgs %>
+      <div class="row">
+        <div class="col-md-5 mx-auto">
+          <div class="card text-center">
+            <div class="card-header">
+              <h4 class="card-title">Iniciar sesión</h4>
+            </div>
+            <div class="card-body">
+              <form action="/login" method="POST" class="form-horizontal">
+                <div class="form-group">
+                  <input
+                    type="text"
+                    title="Folio"
+                    class="form-control"
+                    name="folio"
+                    placeholder="Folio"
+                    value="<%= userCredentials.folio%>"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <input
+                    type="password"
+                    title="Contraseña"
+                    class="form-control"
+                    value="<%= userCredentials.psw%>"
+                    name="psw"
+                    placeholder="Contraseña"
+                    required
+                  />
+                </div>
+                <button class="btn btn-primary btn-block">
+                  Entrar
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

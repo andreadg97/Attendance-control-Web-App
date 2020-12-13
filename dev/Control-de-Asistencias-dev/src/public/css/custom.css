@@ -1,0 +1,21 @@
+.fc-toolbar { text-transform: capitalize; }
+.fc-head { text-transform: capitalize; }
+.fc-widget-header{text-transform: capitalize;}
+body {
+    padding-top: 70px;
+
+}
+.container{max-height: 100%;}
+#calendar {
+    max-width: 800px;
+    max-height: 100%;
+}
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+textarea {
+    resize: none;
+}
+.fc-event-container{cursor: pointer}
+.fc-list-item{cursor: pointer}

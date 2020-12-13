@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>Asistencias de Empleados</title>
+    <% include ../partials/bootstrap
+    moment().locale('es') 
+    %>
+    <link href='/css/fullcalendar.css' rel='stylesheet' />
+    <link href='/css/fullcalendar.min.css' rel='stylesheet' />
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src='/js/moment.min.js'></script>
+    <script src='/js/fullcalendar/fullcalendar.min.js'></script>
+    <script src='/js/fullcalendar/fullcalendar.js'></script>
+    <script src='/js/fullcalendar/locale/es.js'></script>
+
+</head>
+
+<body>
+    <% include ../partials/menu-admin %>
+    <div class="container">
+
+        <% include ../partials/_msgs %>
+        <div class="row">
+
+
+
+            <div class="col-md-5 mx-auto text-center">
+                <h1>Asistencias</h1>
+                <div class="card text-center">
+                    <div class="card-header">
+                        <h4 class="card-title">Empleado</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="/empleados/asistencias" method="POST" class="form-horizontal">
+                            <div class="form-group">
+                                <select class="form-control" title="Puesto" name="empleado" required>
+                                    <option value="" disabled selected hidden>Seleccione:</option>
+                                    <% employees.forEach(employee => { %>
+                                    <option value="<%= employee.folio %>"
+                                        <% if(employee.folio == sltdEmployee) {%>selected
+                                        <%}%>><%= "("+employee.folio+") "+employee.nombre%></option> <%});%> </select>
+                                        </div> <button class="btn btn-primary btn-block">
+                                        Consultar
+                                        </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% if(sltdEmployee>=0){%>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-5">
+                <span class="badge badge-success">
+                    <h6>Asistencia</h6>
+                </span>
+                <span class="badge badge-warning">
+                    <h6>Asistencia con retraso</h6>
+                </span>
+                <span class="badge badge-info">
+                    <h6>Falta justificada</h6>
+                </span>
+                <span class="badge badge-danger">
+                    <h6>Falta</h6>
+                </span>
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <!-- Calendar -->
+            <div id="calendar" class="col-centered">
+            </div>
+            <!---->
+        </div>
+    </div>
+    </div>
+    <div class="footer"><br><br></div>
+    <%}%>
+    </div>
+</body>
+<% if(sltdEmployee>=0){%>
+    <script>
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                header: {
+                    language: 'es',
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,basicWeek',
+
+                },
+
+                editable: false,
+                eventLimit: true, // allow "more" link when too many events
+                selectable: true,
+                selectHelper: true,
+                events: [
+                    <% empAttendences.forEach(attendence => { %>
+
+                    {
+                            <%
+                    let title = "FALTA";
+                    let color = "#E74C3C";
+                    let textColor = "white";
+                    let allDay = true;
+                    switch (attendence.type) {
+                        case 1: {
+                            title = "ASISTENCIA";
+                            color = "#18BC9C";
+                            allDay = false;
+                        };
+                            break;
+                        case 2: {
+                            title = "RETRASO";
+                            color = "#F39C12";
+                            allDay = false;
+                        };
+                            break;
+                        case 3: {
+                            title = "JUSTIFICADA";
+                            color = "#3498DB";
+                            allDay = false;
+                        };
+                            break;
+                    }%>
+                        title: '<%= title%>',
+                            start: '<%= moment(attendence.fecha).format("YYYY-MM-DD HH:mm:ss") %>',
+                                color: '<%= color%>',
+                                    textColor: '<%= textColor%>',
+                                        allDay: <%= allDay %>
+
+                    },
+            
+                   <% }) %>
+                    
+
+                ],
+            timeFormat: 'H:mm'
+        });
+        });
+    </script>
+    <%}%>
+
+</html>

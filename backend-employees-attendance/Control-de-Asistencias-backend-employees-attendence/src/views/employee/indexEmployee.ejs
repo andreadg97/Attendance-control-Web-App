@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>Registro de asistencia | Empleado</title>
+    <% include ../partials/bootstrap %>
+  </head>
+  <body>
+    <% include ../partials/menu-employee %> 
+    <% if(attndcInfo.noWorkTime) { %>
+      <div>
+      <h1 align=center>Registro de asistencias</h1>
+      <table align="center">
+        <tr>
+          <td> <h4 class="text-danger" >No se puede registrar asistencia, fuera de horario </h4> </td>
+          <td> <h4>Aqui muestra la hora del sistema</h4> </td>
+        </tr>
+      </table>
+      <center>
+      <button class="btn btn-primary btn-block" align="center" style='width:20%; height:5%'  >
+          Ver mis asistencias
+          </button>
+         </center>
+  </div>
+
+    <%} else if(attndcInfo.delayed){%>
+      <div>
+        <h1 align="center">Registro de asistencias</h1>
+        <table align="center">
+          <tr>
+            <h4 align="center" class="text-danger">Asistencia sin registrar</h4>
+          </tr>
+          <tr>
+            <td><h5>Hora actual</h5></td>
+            <td><h5>Aqui la hora del sistema</h5></td>
+          </tr>
+        </table>
+  
+        <center>
+          <button class="btn btn-success" style="width:20%; height:5%">
+            Registrar Asistencia con retraso
+          </button>
+        </center>
+      </div>
+<% }else{ if(attndcInfo.onTime){%>
+    <div class="container">
+      <% include ../partials/_msgs %>
+      <h1 align="center">Registro de asistencias</h1>
+      <table align="center">
+        <tr>
+          <h4 align="center" class="text-danger">Asistencia sin registrar</h4>
+        </tr>
+        <tr>
+          <td><h5>Hora actual</h5></td>
+          <td><h5>Aqui la hora del sistema</h5></td>
+        </tr>
+      </table>
+
+      <center>
+        <button class="btn btn-success" style="width:20%; height:5%">
+          Registrar Asistencia
+        </button>
+      </center>
+    </div>
+<% } else{%>
+      <div class="container">
+      <% include ../partials/_msgs %>
+      <h1 align="center">Registro de asistencias</h1>
+      <table align="center">
+        <tr>
+          <td><h4 class="text-success">Asistencia registrada a las:</h4></td>
+          <td><h4>Aqui la hora cuando checo</h4></td>
+        </tr>
+      </table>
+      <center>
+        <button
+          class="btn btn-primary btn-block"
+          align="center"
+          style="width:20%; height:5%"
+        >
+          Ver mis asistencias
+        </button>
+      </center>
+    </div>
+<%}}%>
+
+   
+  </body>
+</html>
